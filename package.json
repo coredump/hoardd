@@ -1,0 +1,14 @@
+{
+  "name": "hoardd",
+  "version": "0.2.0",
+  "description": "Hoard the data to graphite",
+  "author": "Jose de Paula Eufrasio Junior  <jose.junior@gmail.com>",
+  "dependencies": {
+    "cli": "0.4.x",
+    "coffee-script": "1.2.x"
+  },
+  "devDependencies": {
+    "nodemon": "0.6.x"
+  },
+  "engine": "node >= 0.6.x"
+}
