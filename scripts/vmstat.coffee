@@ -1,5 +1,3 @@
-# License goes here
-
 Exec  = require('child_process').exec
 
 module.exports = (server) ->

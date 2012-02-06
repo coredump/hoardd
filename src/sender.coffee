@@ -1,5 +1,3 @@
-# License goes here
-
 Net = require 'net'
 Util = require 'util'
 

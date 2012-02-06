@@ -1,5 +1,3 @@
-# License goes here
-
 Exec  = require('child_process').exec
 util = require 'util'
 
@@ -24,4 +22,3 @@ module.exports = (server) ->
 
           server.push_metric("#{metricPrefix}.#{statObj.mount_point}.#{key}",
                              value) for key, value of statObj when key isnt 'mount_point' 
-

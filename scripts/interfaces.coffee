@@ -1,5 +1,3 @@
-# License goes here
-
 Fs = require 'fs'
 util = require 'util'
 

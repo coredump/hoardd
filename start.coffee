@@ -1,5 +1,3 @@
-# License goes here
-
 Server  = require './src/server'
 Path    = require 'path'
 Cli     = require('cli').enable('status', 'version')

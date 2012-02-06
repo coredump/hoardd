@@ -1,5 +1,3 @@
-# License goes here
-
 os = require 'os'
 
 module.exports = (server) ->

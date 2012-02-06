@@ -4,6 +4,6 @@
   "scriptPath":   "/home/coredump/dev/hoardd/scripts",
   "fqdn":         "janie.coredump.io",
   "sampleInterval": 10,
-  "sendEach": 2,
-  "maxFailedSends": 10000
+  "sendEach": 6,
+  "maxFailedSens": 10000
 }

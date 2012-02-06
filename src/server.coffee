@@ -1,5 +1,3 @@
-# License goes here
-
 EventEmitter  = require('events').EventEmitter
 Sender        = require './sender'
 Path          = require 'path'
