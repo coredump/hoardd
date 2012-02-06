@@ -3,7 +3,7 @@
   "carbonPort":   2003,
   "scriptPath":   "/home/coredump/dev/hoardd/scripts",
   "fqdn":         "janie.coredump.io",
-  "sampleInterval": 5,
-  "sendInterval": 5,
-  "useUDP": false
+  "sampleInterval": 10,
+  "sendEach": 2,
+  "maxFailedSends": 10000
 }

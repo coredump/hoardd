@@ -14,19 +14,20 @@ Cli.parse
 
 Cli.main (args, options) ->
   if Path.existsSync options.config
-    conf = JSON.parse(Fs.readFileSync(options.config, 'utf-8'))
+    try
+      conf = JSON.parse(Fs.readFileSync(options.config, 'utf-8'))
+    catch error
+      cli.debug "Error parsing config file: #{error}"
   else
     Cli.fatal "Can't find a config file"
 
   hoard = new Server conf, Cli
+  hoard.load_scripts()
 
   hoard.on 'run', hoard.run_scripts
-  hoard.on 'send', hoard.send_metrics
 
   setInterval(->
     hoard.emit 'run'
   ,conf.sampleInterval * 1000)
 
-  setInterval(->
-    hoard.emit 'send'
-  ,conf.sendInterval * 1000)
+  Cli.info "HoardD started. Samples each #{conf.sampleInterval} seconds. Sending to graphite each #{conf.sendEach} samplings"
