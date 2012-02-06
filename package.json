@@ -7,8 +7,5 @@
     "cli": "0.4.x",
     "coffee-script": "1.2.x"
   },
-  "devDependencies": {
-    "nodemon": "0.6.x"
-  },
   "engine": "node >= 0.6.x"
 }
