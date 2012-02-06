@@ -1,5 +1,4 @@
 Net = require 'net'
-Util = require 'util'
 
 class Sender
   

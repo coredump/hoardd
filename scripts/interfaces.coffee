@@ -1,5 +1,4 @@
 Fs = require 'fs'
-util = require 'util'
 
 module.exports = (server) ->
   run = () ->

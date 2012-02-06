@@ -1,5 +1,4 @@
 Exec  = require('child_process').exec
-util = require 'util'
 
 module.exports = (server) ->
   run = () ->
