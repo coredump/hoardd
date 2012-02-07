@@ -18,7 +18,7 @@ module.exports = (server) ->
       continue if line.match /lo:/ 
       regex = /(.+):(.*)/
       matched = line.match(regex)
-      interface = matched[1]
+      interface = matched[1].trim()
       values = matched[2].trim().split /\s+/
       statObj = {}
       statObj[key] = values[i] for key, i in nameArray
