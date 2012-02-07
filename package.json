@@ -5,7 +5,8 @@
   "author": "Jose de Paula Eufrasio Junior  <jose.junior@gmail.com>",
   "dependencies": {
     "cli": "0.4.x",
-    "coffee-script": "1.2.x"
+    "coffee-script": "1.2.x",
+    "redis": "0.7.x"
   },
   "engine": "node >= 0.6.x"
 }
