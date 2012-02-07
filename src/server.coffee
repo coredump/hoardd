@@ -35,7 +35,9 @@ class HoardD extends EventEmitter
 
   push_metric: (prefix, value) ->
     try
-      @pending.push "hoard.#{prefix} #{value} #{@now()}"
+      metric = "hoard.#{prefix} #{value} #{@now()}"
+      @pending.push metric
+      @cli.debug metric
     catch error
       @cli.fatal "Error adding metric: #{error}"
 
