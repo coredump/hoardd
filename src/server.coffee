@@ -1,6 +1,7 @@
 EventEmitter  = require('events').EventEmitter
 Sender        = require './sender'
 Path          = require 'path'
+Util          = require 'util'
 Fs            = require 'fs'
 
 class HoardD extends EventEmitter
@@ -9,6 +10,7 @@ class HoardD extends EventEmitter
     @sPath = @conf.scriptPath
     @fqdn = @conf.fqdn.split('.').join('_')
     @samplesRun = 0
+    @util = Util
 
     # Containers
     @scripts  = []

@@ -16,8 +16,10 @@ module.exports = (server) ->
     content = Fs.readFileSync(procfile, 'ascii').trim()
     for line in content.split('\n')[2...]
       continue if line.match /lo:/ 
-      values = line.trim().split /\s+/
-      interface = values[0].replace /:$/, ''
+      regex = /(.+):(.*)/
+      matched = line.match(regex)
+      interface = matched[1]
+      values = matched[2].trim().split /\s+/
       statObj = {}
-      statObj[key] = values[i + 1] for key, i in nameArray
+      statObj[key] = values[i] for key, i in nameArray
       server.push_metric "#{metricPrefix}.#{interface}.#{key}", value for key, value of statObj 
