@@ -17,6 +17,8 @@ Configuration is done using the a json file. The package includes a default conf
 
 Also, HoardD was made to be used with chef (or any other configuration management system) so while I know that configuring the FQDN on the config JSON is annoying, it was meant to be automatically filled by a template. If you are managing lots of servers and configs by hand in 2012 you are doing it wrong.
 
+The master branch will be updated only to working versions (i.e: I will *try* not to break it), so you can probably just do a clone/fetch/pull from it on new versions.
+
 Retentions, sample interval and counter metrics
 ------------------------------------------------
 
@@ -30,9 +32,9 @@ retentions = 10s:60m,1m:24h,15m:5y
 
 ### Counter metrics
 
-Counter metrics are ever increasing counters, like the ones used on `/proc/net/interfaces`, if you want to get a per second graphic (like Kb/s in the interfaces speed case) you need to apply Graphite functions: derivative and scale.
+Counter metrics are ever increasing counters, like the ones used on `/proc/net/interfaces`, if you want to get a per second graphic (like Kb/s in the interfaces speed case) you need to apply Graphite functions: `derivative` and `scale`.
 
-Derivative will make the graphs show the difference between 2 samples of data instead of an ever increasing counter, so if your counter increased from 1000 to 1100 between 2 samples the graph will show 100, not 1100. Now this is between 2 samples, and your samples are each 10 seconds so Graphite makes an average of it. If you need the graph on a per-second basis you must apply the `scale` function that will multiply that value by a ratio. If you need the graph in per seconds you then must multiply the value by 1/10 = 0.1. 
+`derivative` will make the graphs show the difference between 2 samples of data instead of an ever increasing counter, so if your counter increased from 1000 to 1100 between 2 samples the graph will show 100, not 1100. Now this is between 2 samples, and your samples are each 10 seconds so Graphite makes an average of it. If you need the graph on a per-second basis you must apply the `scale` function that will multiply that value by a ratio. If you need the graph in per seconds you then must multiply the value by 1/10 = 0.1. 
 
 **TL;DR**: use `derivative` to make the graph show differences between two samples and `scale` to make it show per second. The scale is always 1/*data retention value* of the graph.
 
