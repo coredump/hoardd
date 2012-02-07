@@ -6,16 +6,16 @@ class Sender
 
   send: ->
     return unless @server.pending.length > 0
-    lines = @server.pending.join('\n') + '\n'
     conn = Net.connect @conf.carbonPort, @conf.carbonHost
     conn.addListener 'error', (error) =>
       @cli.debug "Connection error: #{error}"
     conn.on 'connect', () =>
       @cli.debug "Connected to #{@conf.carbonHost}:#{@conf.carbonPort}"
       try
-        @cli.debug "Sending lines: #{lines}"
-        conn.write lines
-        @server.pending = []
+        @cli.debug "Sending metrics"
+        while line = @server.pending.shift()
+          conn.write "#{line}\n"
+          @cli.debug "#{line}"
         @server.samplesRun = 0
       catch error
         @cli.error "Failed to send data: #{error}"
