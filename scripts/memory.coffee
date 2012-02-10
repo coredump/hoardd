@@ -10,12 +10,12 @@ module.exports = (server) ->
     content = Fs.readFileSync memfile, 'ascii'
     mem = {}
     for line in content.split('\n')
-      mem.total       = parseInt line.split(/\s+/)[1] if line.match /^MemTotal/
-      mem.free        = parseInt line.split(/\s+/)[1] if line.match /^MemFree/
-      mem.buffers     = parseInt line.split(/\s+/)[1] if line.match /^Buffers/
-      mem.cached      = parseInt line.split(/\s+/)[1] if line.match /^Cached/
-      mem.swapTotal   = parseInt line.split(/\s+/)[1] if line.match /^SwapTotal/
-      mem.swapFree    = parseInt line.split(/\s+/)[1] if line.match /^SwapFree/
+      mem.total       = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^MemTotal/
+      mem.free        = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^MemFree/
+      mem.buffers     = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^Buffers/
+      mem.cached      = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^Cached/
+      mem.swapTotal   = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^SwapTotal/
+      mem.swapFree    = parseInt(line.split(/\s+/)[1]) * 1024 if line.match /^SwapFree/
     
     mem.swapUsed = mem.swapTotal - mem.swapFree
     mem.used = mem.total - mem.free
