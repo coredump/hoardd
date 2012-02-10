@@ -2,6 +2,8 @@ Mysql = require 'mysql'
 Fs    = require 'fs'
 Path  = require 'path'
 
+# To configure this plugin use the mysql.json file and put it on the scripts/ directory
+
 # Metrics to get from the statuses
 generalMetrics = 
   'rxBytes':                  'Bytes_received',
@@ -98,14 +100,14 @@ module.exports = (server) ->
     conn = Mysql.createClient conf
     conn.query 'SHOW GLOBAL STATUS', (err, res, fields) ->
       if err
-        server.cli "Error on STATUS query: #{err}"
+        server.cli.error "Error on STATUS query: #{err}"
 
       for row in res
         data[row.Variable_name] = row.Value
 
       conn.query 'SHOW SLAVE STATUS', (err, res, fields) ->
         if err
-          server.cli "Error on SLAVE STATUS query: #{err}"
+          server.cli.error "Error on SLAVE STATUS query: #{err}"
 
         data[key] = value for key, value of res[0]
 

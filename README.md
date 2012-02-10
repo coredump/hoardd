@@ -19,6 +19,15 @@ Also, HoardD was made to be used with chef (or any other configuration managemen
 
 The master branch will be updated only to working versions (i.e: I will *try* not to break it), so you can probably just do a clone/fetch/pull from it on new versions.
 
+### Scripts and specific configuration
+
+The MySQL script is an example of how to configure specific scripts. It contains a `mysql.json` file that is read by the script when it starts. Just make sure to:
+
+* Keep the configs with the same name as the plugin (like, mysql.coffee and mysql.json)
+* Put/link the configuration on the script path (together with the scripts)
+
+For real, you can do whatever you want on your scripts, but it's better to make it easier for other people to configure/understand, so let's stick to a default.
+
 Retentions, sample interval and counter metrics
 ------------------------------------------------
 
@@ -37,6 +46,12 @@ Counter metrics are ever increasing counters, like the ones used on `/proc/net/i
 `derivative` will make the graphs show the difference between 2 samples of data instead of an ever increasing counter, so if your counter increased from 1000 to 1100 between 2 samples the graph will show 100, not 1100. Now this is between 2 samples, and your samples are each 10 seconds so Graphite makes an average of it. If you need the graph on a per-second basis you must apply the `scale` function that will multiply that value by a ratio. If you need the graph in per seconds you then must multiply the value by 1/10 = 0.1. 
 
 **TL;DR**: use `derivative` to make the graph show differences between two samples and `scale` to make it show per second. The scale is always 1/*data retention value* of the graph.
+
+For example, for network speed:
+
+```
+scale(derivative(hoard.host.interfaces.eth0.txBytes),0.1)
+```
 
 Writing new scripts
 --------------------
