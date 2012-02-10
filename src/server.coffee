@@ -1,8 +1,8 @@
-EventEmitter  = require('events').EventEmitter
-Sender        = require './sender'
-Path          = require 'path'
-Util          = require 'util'
-Fs            = require 'fs'
+EventEmitter = require('events').EventEmitter
+Sender       = require './sender'
+Path         = require 'path'
+Util         = require 'util'
+Fs           = require 'fs'
 
 class HoardD extends EventEmitter
   
@@ -21,7 +21,7 @@ class HoardD extends EventEmitter
     for file in Fs.readdirSync @sPath
       ext = Path.extname file
       continue unless ext == '.coffee'
-      toLoad = Path.join(@sPath, Path.basename(file, ext))
+      toLoad = Path.join(@sPath, Path.basename file)
       try
         @cli.info "Loading script #{toLoad}"
         @scripts.push(require(toLoad) @)

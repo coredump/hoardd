@@ -1,4 +1,4 @@
-os = require 'os'
+Os = require 'os'
 
 module.exports = (server) ->
   run = () ->
@@ -6,5 +6,5 @@ module.exports = (server) ->
     server.cli.debug "Running uptime script"
 
     # Node os object makes this easy
-    uptime = os.uptime()
+    uptime = Os.uptime()
     server.push_metric metricPrefix, uptime

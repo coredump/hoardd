@@ -1,7 +1,7 @@
-Server  = require './server'
-Path    = require 'path'
-Cli     = require('cli').enable('status', 'version')
-Fs      = require 'fs'
+Server = require './server'
+Path   = require 'path'
+Cli    = require('cli').enable('status', 'version')
+Fs     = require 'fs'
 
 # Command Line Setup
 module.exports = entry_point = () ->
