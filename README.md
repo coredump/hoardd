@@ -13,7 +13,7 @@ There are other projects that do the same: [collectd](http://collectd.org/) has 
 Install, configure and run it
 ---------------------------------
 
-Configuration is done using the a json file. The package includes a default config that you probably can use after changing the hostname for your graphite/carbon node. HoardD was meant to be used with runit and similar tools so no daemonizing is done and all the logging is written on stdout (use `--debug` if you want detailed info on what is happening.) By default scripts sample the data each 10 seconds, and then sends the data to graphite each 6 samples are collected, effectively making one connection each 60 seconds.
+Configuration is done using the a `json` file. The package includes a default config that you probably can use after changing the hostname for your graphite/carbon node. HoardD was meant to be used with runit and similar tools so no daemonizing is done and all the logging is written on stdout (use `--debug` if you want detailed info on what is happening.) By default scripts sample the data each 10 seconds, and then sends the data to graphite each 6 samples are collected, effectively making one connection each 60 seconds.
 
 Also, HoardD was made to be used with chef (or any other configuration management system) so while I know that configuring the FQDN on the config JSON is annoying, it was meant to be automatically filled by a template. If you are managing lots of servers and configs by hand in 2012 you are doing it wrong.
 
@@ -23,7 +23,7 @@ The master branch will be updated only to working versions (i.e: I will *try* no
 
 The MySQL script is an example of how to configure specific scripts. It contains a `mysql.json` file that is read by the script when it starts. Just make sure to:
 
-* Keep the configs with the same name as the plugin (like, mysql.coffee and mysql.json)
+* Keep the configs with the same name as the plugin (like, `mysql.coffee` and `mysql.json`)
 * Put/link the configuration on the script path (together with the scripts)
 
 For real, you can do whatever you want on your scripts, but it's better to make it easier for other people to configure/understand, so let's stick to a default.
@@ -56,7 +56,7 @@ scale(derivative(hoard.host.interfaces.eth0.txBytes),0.1)
 Writing new scripts
 --------------------
 
-To add new scripts just drop the `.coffee` file on `scriptPath` and restart HoardD (making it detect new scripts without restarting is on TODO).
+To add new scripts just drop the `.coffee` or `.js` file on `scriptPath` and restart HoardD (making it detect new scripts without restarting is on TODO).
 
 Writing new scripts should be easy:
 
@@ -70,20 +70,48 @@ Writing new scripts should be easy:
 * `cli` has all the methods from the [cli](https://github.com/chriso/cli) module (use it for logging)
 * `fqdn` the server FQDN configured on the JSON config file for you to use on metrics
 
-Code speaks better than words in some case, this is the uptime script:
+Code speaks better than words in some case, this is the `load_average.coffee` script:
 
 ```coffeescript
-
-os = require 'os'
+Fs = require 'fs'
+Path = require 'path'
 
 module.exports = (server) ->
   run = () ->
-    metricPrefix = "#{server.fqdn}.uptime"
-    server.cli.debug "Running uptime script"
+    metricPrefix = "#{server.fqdn}.load_average"
+    server.cli.debug "Running load average script"
 
-    # Node os object makes this easy
-    uptime = os.uptime()
-    server.push_metric metricPrefix, uptime
+    # Read from /proc
+    procfile = '/proc/loadavg'
+    if Path.existsSync procfile
+      data = Fs.readFileSync(procfile, 'utf-8')
+      [one, five, fifteen] = data.split(' ', 3)
+      server.push_metric "#{metricPrefix}.short", one
+      server.push_metric "#{metricPrefix}.medium", five
+      server.push_metric "#{metricPrefix}.long", fifteen
+```
+
+And this is the `uptime.js` script:
+
+```javascript
+var Os;
+
+Os = require('os');
+
+module.exports = function(server) {
+  var run;
+
+  run = function() {
+    var metricPrefix, uptime;
+    metricPrefix = server.fqdn + ".uptime";
+    server.cli.debug("Running uptime script");
+
+    // Node os object makes this easy
+    uptime = Os.uptime();
+    server.push_metric(metricPrefix, uptime);
+  }
+  return run;
+}
 ```
 
 Take a look at the code of the other scripts and you will see that there's nothing genius going on there. 
@@ -94,5 +122,6 @@ License and author
 ------------------
 
 HoardD is licensed under the MIT License but please, send back your changes :). A copy of the license is included on the LICENSE file.
-You can probably read announcements and news on http://coredump.io
+
+You can read announcements and news on http://coredump.io
 
