@@ -1,9 +1,0 @@
-{
-  "carbonHost":   "localhost",
-  "carbonPort":   2003,
-  "scriptPath":   "/home/coredump/dev/hoardd/scripts",
-  "fqdn":         "janie.coredump.io",
-  "sampleInterval": 10,
-  "sendEach": 6,
-  "maxFailedSens": 10000
-}

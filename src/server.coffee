@@ -20,7 +20,7 @@ class HoardD extends EventEmitter
   load_scripts: ->
     for file in Fs.readdirSync @sPath
       ext = Path.extname file
-      continue unless ext == '.coffee'
+      continue unless ext in [ '.coffee', '.js' ]
       toLoad = Path.join(@sPath, Path.basename file)
       try
         @cli.info "Loading script #{toLoad}"
