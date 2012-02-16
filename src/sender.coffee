@@ -1,4 +1,5 @@
 Net = require 'net'
+Graphite = require 'graphite'
 
 class Sender
   
@@ -6,22 +7,19 @@ class Sender
 
   send: ->
     return unless @server.pending.length > 0
-    conn = Net.connect @conf.carbonPort, @conf.carbonHost
-    conn.addListener 'error', (error) =>
-      @cli.debug "Connection error: #{error}"
-    conn.on 'connect', () =>
-      @cli.debug "Connected to #{@conf.carbonHost}:#{@conf.carbonPort}"
-      try
-        @cli.debug "Sending metrics"
-        while line = @server.pending.shift()
-          conn.write "#{line}\n"
-          @cli.debug "#{line}"
-        @server.samplesRun = 0
-      catch error
-        @cli.error "Failed to send data: #{error}"
-        throw new Error "Failed to send data: #{error}"
-      finally
-        @cli.debug "Disconnected"
-        conn.end()
+    url  = "plaintext://#{@conf.carbonHost}:#{@conf.carbonPort}"
+    conn = Graphite.createClient url
+
+    @cli.debug "Sending metrics to #{url}"
+    while metric = @server.pending.shift()
+      toSend = {}
+      toSend[metric[0]] = metric[1]
+      conn.write toSend, metric[2], (err) =>
+        if err
+          @cli.error "Could not send metrics, will send when the connection is back up: #{err}"
+      @cli.debug "#{metric}"
+    
+    conn.end()
+    @server.samplesRun = 0
 
 module.exports = Sender

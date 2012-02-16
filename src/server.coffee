@@ -31,11 +31,11 @@ class HoardD extends EventEmitter
 
   now: ->
     date  = new Date()
-    now   = Math.round date.getTime()/1000
+    now   = Math.round date.getTime() # node-graphite divides /1000 already
 
   push_metric: (prefix, value) ->
     try
-      metric = "hoard.#{prefix} #{value} #{@now()}"
+      metric = ["hoard.#{prefix}", value, @now()]
       @pending.push metric
       @cli.debug metric
     catch error

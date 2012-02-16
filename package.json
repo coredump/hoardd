@@ -7,6 +7,7 @@
     "cli": "0.4.x",
     "coffee-script": "1.2.x",
     "redis": "0.7.x",
+    "graphite": "0.0.x",
     "mysql":"0.9.x"
   },
   "engine": "node >= 0.6.x"
