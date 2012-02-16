@@ -3,7 +3,7 @@ Fs = require 'fs'
 module.exports = (server) ->
   run = () ->
     metricPrefix = "#{server.fqdn}.interfaces"
-    server.cli.debug "Running the interfaces plugin"
+    server.cli.debug "Running the interfaces scripts"
     nameArray = [
       'rxBytes', 'rxPackets', 'rxErrors', 'rxDrops', 
       'rxFifo', 'rxFrame', 'rxCompressed', 'rxMulticast',

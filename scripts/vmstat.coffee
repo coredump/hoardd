@@ -3,7 +3,7 @@ Exec  = require('child_process').exec
 module.exports = (server) ->
   run = () ->
     metricPrefix = "#{server.fqdn}.vmstat"
-    server.cli.debug "Running the vmstat plugin"
+    server.cli.debug "Running the vmstat script"
     nameArray = [
       'runningProcs', 'blockedProcs',
       'swpdMem', 'freeMem', 'buffMem', 'cacheMem',

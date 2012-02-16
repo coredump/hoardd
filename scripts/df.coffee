@@ -3,7 +3,7 @@ Exec  = require('child_process').exec
 module.exports = (server) ->
   run = () ->
     metricPrefix = "#{server.fqdn}.df"
-    server.cli.debug "Running the  plugin"
+    server.cli.debug "Running the df script"
     nameArray = [
       'used', 'available', 'percent', 'mount_point'
     ]
