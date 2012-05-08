@@ -1,7 +1,13 @@
 Rest  = require('restler')
+Fs    = require 'fs'
+Path  = require 'path'
 
 module.exports = (server) ->
   run = () ->
+    # This script needs configuration
+    confPath     = Path.join server.sPath, 'rabbitmq.json'
+    configFile   = Fs.readFileSync confPath, 'utf-8'
+    conf         = JSON.parse configFile
     stats = ['ack', 'deliver', 'deliver_get', 'deliver_no_ack', 'publish', 'redeliver', 'return_unroutable']
     send_stat = (stat, data) ->
       try
@@ -10,7 +16,7 @@ module.exports = (server) ->
       catch error
        server.cli.debug error
       
-    Rest.get("#{server.conf.rabbitmq.host}:#{server.conf.rabbitmq.port}/api/overview",
-      {username: server.conf.rabbitmq.username, password: server.conf.rabbitmq.password}).on 'complete', (data) ->
+    Rest.get("#{conf.host}:#{conf.port}/api/overview",
+      {username: conf.username, password: conf.password}).on 'complete', (data) ->
       rmq_data = eval data
       send_stat stat, rmq_data for stat in stats
