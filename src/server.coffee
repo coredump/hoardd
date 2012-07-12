@@ -9,6 +9,7 @@ class HoardD extends EventEmitter
   constructor: (@conf, @cli) ->
     @sPath = @conf.scriptPath
     @fqdn = @conf.fqdn.split('.').join('_')
+    @namespace = @conf.namespace or 'hoard'
     @samplesRun = 0
     @util = Util
 
