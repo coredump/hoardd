@@ -9,6 +9,7 @@ class HoardD extends EventEmitter
   constructor: (@conf, @cli) ->
     @sPath = @conf.scriptPath
     @fqdn = @conf.fqdn.split('.').join('_')
+    @namespace = @conf.namespace or 'hoard'
     @samplesRun = 0
     @util = Util
 
@@ -35,7 +36,7 @@ class HoardD extends EventEmitter
 
   push_metric: (prefix, value) ->
     try
-      metric = "hoard.#{prefix} #{value} #{@now()}"
+      metric = "#{@namespace}.#{prefix} #{value} #{@now()}"
       @pending.push metric
       @cli.debug metric
     catch error
