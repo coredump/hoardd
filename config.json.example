@@ -5,5 +5,6 @@
   "fqdn":         "fqdn.of.this.server",
   "sampleInterval": 10,
   "sendEach": 6,
-  "maxFailedSens": 10000
+  "maxFailedSens": 10000,
+  "namespace": "hoard"
 }
