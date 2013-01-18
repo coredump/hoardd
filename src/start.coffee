@@ -16,7 +16,7 @@ module.exports = entry_point = () ->
       try
         conf = JSON.parse(Fs.readFileSync(options.config, 'utf-8'))
       catch error
-        cli.debug "Error parsing config file: #{error}"
+        Cli.debug "Error parsing config file: #{error}"
     else
       Cli.fatal "Can't find a config file"
 
