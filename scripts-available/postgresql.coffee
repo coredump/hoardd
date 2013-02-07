@@ -1,6 +1,12 @@
-pg = require 'pg'
+Fs    = require 'fs'
+Path  = require 'path'
+Pg    = require 'pg'
 
-# Metrics to get as s from the client_info object
+
+# To configure this plugin use the postgresql.json file and put it on the scripts/ directory
+#
+
+
 metrics =
     'server.numbackends'             : 'select sum(numbackends) as s from pg_stat_database'   # backends currently connected
     'server.committed_transactions'  : 'select sum(xact_commit) as s from pg_stat_database'   # transactions that have been committed
@@ -27,7 +33,7 @@ module.exports = (server) ->
     configFile   = Fs.readFileSync confPath, 'utf-8'
     conf         = JSON.parse configFile
 
-    conn = pg.connect conf,  (error, client) ->
+    conn = Pg.connect conf,  (error, client) ->
       return server.cli.error "Error when connect to PostgreSQL: #{error}" if error?
 
       for own metricKey, metricQuery of metrics
