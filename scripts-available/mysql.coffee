@@ -117,7 +117,7 @@ module.exports = (server) ->
       i = 0
       while i < greppedLines.length
         unless greppedLines[i] is ""
-          port = Math.round(/:([0-9][0-9][0-9][0-9])/.exec(data)[1])
+          port = Math.round(/:([0-9][0-9][0-9][0-9])/.exec(greppedLines[i])[1])
           conn = Mysql.createClient({
           "host":      conf.localhost,
           "user":      conf.user,
