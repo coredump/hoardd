@@ -114,12 +114,10 @@ module.exports = (server) ->
 
     grep.stdout.on 'data', (data) ->
       greppedLines = ("" + data).split( "\n" )
-      console.log greppedLines
       i = 0
       while i < greppedLines.length
         unless greppedLines[i] is ""
           port = Math.round(/:([0-9][0-9][0-9][0-9])/.exec(data)[1])
-          console.log port
           conn = Mysql.createClient({
           "host":      conf.localhost,
           "user":      conf.user,
