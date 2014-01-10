@@ -96,12 +96,7 @@ module.exports = (server) ->
     metricPrefix = "#{server.fqdn}.mysql"
     port = 3306
     data         = {}
-    # This script needs configuration
-    #confPath     = Path.join server.sPath, 'mysql.json'
-    #configFile   = Fs.readFileSync confPath, 'utf-8'
-    #conf         = JSON.parse configFile
-
-    # Changes start from here :
+    
     {spawn} = require 'child_process'
     netstat = spawn 'netstat', ['-ntpl']
     grep = spawn 'grep', ['mysqld']
