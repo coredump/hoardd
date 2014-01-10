@@ -96,6 +96,10 @@ module.exports = (server) ->
     metricPrefix = "#{server.fqdn}.mysql"
     port = 3306
     data         = {}
+    # This script needs configuration
+    confPath     = Path.join server.sPath, 'mysql.json'
+    configFile   = Fs.readFileSync confPath, 'utf-8'
+    conf         = JSON.parse configFile
     
     {spawn} = require 'child_process'
     netstat = spawn 'netstat', ['-ntpl']
@@ -117,9 +121,9 @@ module.exports = (server) ->
           port = Math.round(/:([0-9][0-9][0-9][0-9])/.exec(data)[1])
           console.log port
           conn = Mysql.createClient({
-          "host":      "localhost",
-          "user":      "hoardd_user",
-          "password":  "hoardd_pass",
+          "host":      conf.localhost,
+          "user":      conf.user,
+          "password":  conf.password,
           "port": port
           })
           conn.query 'SHOW GLOBAL STATUS', (err, res, fields) ->
