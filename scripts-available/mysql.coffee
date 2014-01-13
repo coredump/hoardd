@@ -96,24 +96,13 @@ module.exports = (server) ->
     metricPrefix = "#{server.fqdn}.mysql"
     port = 3306
     data         = {}
+    greppedLines = []
     # This script needs configuration
     confPath     = Path.join server.sPath, 'mysql.json'
     configFile   = Fs.readFileSync confPath, 'utf-8'
     conf         = JSON.parse configFile
-    
-    {spawn} = require 'child_process'
-    netstat = spawn 'netstat', ['-ntpl']
-    grep = spawn 'grep', ['mysqld']
 
-    netstat.stdout.on 'data', (data) ->
-      grep.stdin.write(data)
-
-    netstat.on 'close', (code) ->
-      server.cli.error "netstat process exited with code " + code  if code isnt 0
-      grep.stdin.end()
-
-    grep.stdout.on 'data', (data) ->
-      greppedLines = ("" + data).split( "\n" )
+    getMetrics = (greppedLines) ->
       i = 0
       while i < greppedLines.length
         unless greppedLines[i] is ""
@@ -145,3 +134,24 @@ module.exports = (server) ->
                 server.push_metric("#{metricPrefix}.#{port}.#{name}.#{key}", 
                                     data[stat]) for key, stat of group 
         i++
+
+
+    switch conf.multiserver
+      when 0
+        greppedLines[0] = ":" + port
+        getMetrics(greppedLines)
+      when 1
+        {spawn} = require 'child_process'
+        netstat = spawn 'netstat', ['-ntpl']
+        grep = spawn 'grep', ['mysqld']
+
+        netstat.stdout.on 'data', (data) ->
+          grep.stdin.write(data)
+
+        netstat.on 'close', (code) ->
+          server.cli.error "netstat process exited with code " + code  if code isnt 0
+          grep.stdin.end()
+
+        grep.stdout.on 'data', (data) ->
+          greppedLines = ("" + data).split( "\n" )
+          getMetrics(greppedLines)
