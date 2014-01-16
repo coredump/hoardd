@@ -94,30 +94,64 @@ module.exports = (server) ->
   run = () ->
     server.cli.debug "Running the mysql plugin"
     metricPrefix = "#{server.fqdn}.mysql"
+    port = 3306
     data         = {}
+    greppedLines = []
     # This script needs configuration
     confPath     = Path.join server.sPath, 'mysql.json'
     configFile   = Fs.readFileSync confPath, 'utf-8'
     conf         = JSON.parse configFile
-    
-    conn = Mysql.createClient conf
-    conn.query 'SHOW GLOBAL STATUS', (err, res, fields) ->
-      if err
-        server.cli.error "Error on STATUS query: #{err}"
 
-      for row in res
-        data[row.Variable_name] = row.Value
+    getMetrics = (greppedLines) ->
+      i = 0
+      while i < greppedLines.length
+        unless greppedLines[i] is ""
+          port = Math.round(/:([0-9][0-9][0-9][0-9])/.exec(greppedLines[i])[1])
+          conn = Mysql.createClient({
+          "host":      conf.localhost,
+          "user":      conf.user,
+          "password":  conf.password,
+          "port": port
+          })
+          conn.query 'SHOW GLOBAL STATUS', (err, res, fields) ->
+            if err
+              server.cli.error "Error on STATUS query: #{err}"
 
-      conn.query 'SHOW SLAVE STATUS', (err, res, fields) ->
-        if err
-          server.cli.error "Error on SLAVE STATUS query: #{err}"
+            for row in res
+              data[row.Variable_name] = row.Value
 
-        data[key] = value for key, value of res[0]
+            conn.query 'SHOW SLAVE STATUS', (err, res, fields) ->
+              if err
+                server.cli.error "Error on SLAVE STATUS query: #{err}"
 
-        # Replication lag being null is bad, very bad, so negativate it here
-        data['Seconds_Behind_Master'] = -1 if data['Seconds_Behind_Master'] == null  
-        conn.end()
+              data[key] = value for key, value of res[0]
 
-        for name, group of metricGroups
-          server.push_metric("#{metricPrefix}.#{name}.#{key}", 
-                              data[stat]) for key, stat of group 
+              # Replication lag being null is bad, very bad, so negativate it here
+              data['Seconds_Behind_Master'] = -1 if data['Seconds_Behind_Master'] == null  
+              conn.end()
+
+              for name, group of metricGroups
+                server.push_metric("#{metricPrefix}.#{port}.#{name}.#{key}", 
+                                    data[stat]) for key, stat of group 
+        i++
+
+
+    switch conf.multiserver
+      when 0
+        greppedLines[0] = ":" + port
+        getMetrics(greppedLines)
+      when 1
+        {spawn} = require 'child_process'
+        netstat = spawn 'netstat', ['-ntpl']
+        grep = spawn 'grep', ['mysqld']
+
+        netstat.stdout.on 'data', (data) ->
+          grep.stdin.write(data)
+
+        netstat.on 'close', (code) ->
+          server.cli.error "netstat process exited with code " + code  if code isnt 0
+          grep.stdin.end()
+
+        grep.stdout.on 'data', (data) ->
+          greppedLines = ("" + data).split( "\n" )
+          getMetrics(greppedLines)
