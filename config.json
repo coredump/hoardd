@@ -1,10 +1,10 @@
 {
   "carbonHost":   "localhost",
   "carbonPort":   2003,
-  "scriptPath":   "/full/path/to/scripts/dir",
+  "scriptPath":   "/data/scripts",
   "fqdn":         "fqdn.of.this.server",
-  "sampleInterval": 10,
-  "sendEach": 6,
+  "sampleInterval": 5,
+  "sendEach": 3,
   "maxFailedSens": 10000,
   "namespace": "hoard"
 }

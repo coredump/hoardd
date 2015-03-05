@@ -15,6 +15,8 @@ module.exports = entry_point = () ->
     if Fs.existsSync options.config
       try
         conf = JSON.parse(Fs.readFileSync(options.config, 'utf-8'))
+        conf.carbonHost = if process.env.CARBON_HOST then process.env.CARBON_HOST else conf.carbonHost
+        conf.fqdn = if process.env.FQDN then process.env.FQDN else conf.fqdn
       catch error
         Cli.debug "Error parsing config file: #{error}"
     else

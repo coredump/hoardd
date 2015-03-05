@@ -5,7 +5,7 @@ module.exports = (server) ->
     metricPrefix = "#{server.fqdn}.memory"
     server.cli.debug 'Running the memory script'
     # From the proc
-    memfile = '/proc/meminfo'
+    memfile = '/host_proc/meminfo'
 
     content = Fs.readFileSync memfile, 'ascii'
     mem = {}
