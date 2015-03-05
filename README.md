@@ -1,5 +1,16 @@
-HoardD, send ALL metrics to graphite!
+HoardD forkd!
 =====================================
+
+This fork contains dockerfile and modified HoardD with support for ENV-vars (graphite host and fqnd)
+Also fixed deprecated Path.exists functions into Fs.exists.
+
+
+Running
+--------------
+`docker build -t hoardd .`   
+
+`docker run -d -e CARBON_HOST=carbon.server.org -e FQDN=docker.host.hostname -v /proc:/host_proc:ro -t hoardd`
+
 
 What is HoardD
 ---------------

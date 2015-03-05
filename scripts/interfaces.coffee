@@ -12,7 +12,7 @@ module.exports = (server) ->
     ]
 
     # Reads from proc
-    procfile = '/proc/net/dev'
+    procfile = '/host_proc/net/dev'
     content = Fs.readFileSync(procfile, 'ascii').trim()
     for line in content.split('\n')[2...]
       continue if line.match /lo:/ 
