@@ -12,7 +12,7 @@ module.exports = entry_point = () ->
     'config': ['c', 'Configuration file path', 'path', './config.json']
 
   Cli.main (args, options) ->
-    if Path.existsSync options.config
+    if Fs.existsSync options.config
       try
         conf = JSON.parse(Fs.readFileSync(options.config, 'utf-8'))
       catch error
