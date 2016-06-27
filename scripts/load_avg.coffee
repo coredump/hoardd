@@ -1,5 +1,5 @@
 Fs = require 'fs'
-Path = require 'path'
+Fs = require 'fs'
 
 module.exports = (server) ->
   run = () ->
@@ -8,7 +8,7 @@ module.exports = (server) ->
 
     # Read from /proc
     procfile = '/proc/loadavg'
-    if Path.existsSync procfile
+    if Fs.existsSync procfile
       data = Fs.readFileSync(procfile, 'utf-8')
       [one, five, fifteen] = data.split(' ', 3)
       server.push_metric "#{metricPrefix}.short", one
