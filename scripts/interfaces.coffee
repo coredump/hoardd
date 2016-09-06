@@ -16,6 +16,7 @@ module.exports = (server) ->
     content = Fs.readFileSync(procfile, 'ascii').trim()
     for line in content.split('\n')[2...]
       continue if line.match /lo:/ 
+      continue if line.match /veth[a-zA-Z0-9]+:/ 
       regex = /(.+):(.*)/
       matched = line.match(regex)
       iface = matched[1].trim()
